@@ -15,4 +15,4 @@ Route::get('/', 'WelcomeController@show');
 
 Route::get('/home', 'HomeController@show');
 
-Route::get('/test', 'AppointmentController@show');
+Route::get('/test/{month}/{year}', 'AppointmentController@renderCalendar');

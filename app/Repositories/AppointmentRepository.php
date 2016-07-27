@@ -10,7 +10,7 @@ class AppointmentRepository
 	* 
 	* @param int $month
 	* @param int $year
-	* @return string A calendar
+	* @return string HTML markup for calendar
 	*/
 	public function renderCalendar($month,$year)
 	{
@@ -75,10 +75,17 @@ class AppointmentRepository
 		return $calendar;
 	}
 
-/* sample usages */
-/*echo '<h2>July 2009</h2>';
-echo draw_calendar(7,2009);
+	public function getNextCalendar($month, $year)
+	{
+		if ($month >= 12) {
+            $nextMonth = 1;
+            $nextYear = $year + 1;
 
-echo '<h2>August 2009</h2>';
-echo draw_calendar(8,2009);*/
+        } else {
+            $nextMonth = $month + 1;
+            $nextYear = $year;
+        }
+
+        return ['nextMonth' => $nextMonth, 'nextYear' => $nextYear];
+	}
 }
