@@ -75,17 +75,27 @@ class AppointmentRepository
 		return $calendar;
 	}
 
-	public function getNextCalendar($month, $year)
+	public function getNextAndPrevCalendar(int $month, int $year)
 	{
 		if ($month >= 12) {
-            $nextMonth = 1;
-            $nextYear = $year + 1;
+            $nextMonth 	   = 1;
+            $nextYear 	   = $year + 1;
+            $previousMonth = 11;
+            $previousYear  = $year;
 
         } else {
-            $nextMonth = $month + 1;
-            $nextYear = $year;
+            $nextMonth 	   = $month + 1;
+            $nextYear  	   = $year;
+            // Check if we're in January
+            $previousMonth = ($month - 1 == 0) ? 12 : $month - 1;
+            $previousYear  = ($month - 1 == 0) ? $year - 1 : $year;
         }
 
-        return ['nextMonth' => $nextMonth, 'nextYear' => $nextYear];
+        return [
+        		'nextMonth' 	 => $nextMonth, 
+        		'nextPagesYear'  => $nextYear, 
+        		'prevPagesMonth' => $previousMonth, 
+        		'prevPagesYear'  => $previousYear
+        	];
 	}
 }

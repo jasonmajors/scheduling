@@ -10,7 +10,7 @@ class AppointmentController extends Controller
     /**
      * The appointment repository instance.
      *
-     * @var TaskRepository
+     * @var AppointmentRepository
      */
     protected $appointmentRepo;
 
@@ -39,22 +39,38 @@ class AppointmentController extends Controller
         return view('home');
     }
 
+
+    /**
+    * Render the HTML calendar for a given month and year value
+    *
+    * @param int $month
+    * @param int $year
+    * @return Reponse
+    */
     public function renderCalendar(int $month, int $year)
     {
         // Set max month value to 12
         $month = ($month > 12) ? $month = 12 : $month = $month;
 
-        $nextCalendar   = $this->appointmentRepo->getNextCalendar($month, $year);
-        $nextMonth      = $nextCalendar['nextMonth'];
-        $nextYear       = $nextCalendar['nextYear'];
+        $linkDates = $this->appointmentRepo->getNextAndPrevCalendar($month, $year);
+
+        $nextMonth      = $linkDates['nextMonth'];
+        $nextPagesYear  = $linkDates['nextPagesYear'];
+        $prevMonth      = $linkDates['prevPagesMonth'];
+        $prevPagesYear  = $linkDates['prevPagesYear'];
+
         $calendarMarkup = $this->appointmentRepo->renderCalendar($month, $year);
 
         return view('calendar.calendar', [
-                'month'         => $month, 
+                'month'         => date('F', mktime(0,0,0, $month, 1, $year)),
                 'year'          => $year,
                 'nextMonth'     => $nextMonth,
-                'nextYear'      => $nextYear, 
+                'nextPagesYear' => $nextPagesYear, 
+                'prevPagesMonth'=> $prevMonth,
+                'prevPagesYear' => $prevPagesYear,
                 'calendarMarkup'=> $calendarMarkup
         ]);
-    }
+    }  
+
+
 }
