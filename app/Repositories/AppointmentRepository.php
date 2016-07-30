@@ -2,6 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Appointment;
+
+
 class AppointmentRepository
 {
 	
@@ -97,5 +100,12 @@ class AppointmentRepository
         		'prevPagesMonth' => $previousMonth, 
         		'prevPagesYear'  => $previousYear
         	];
+	}
+
+	// Should be load availability
+	public function loadAppointments(int $month, int $year)
+	{
+		// @todo query appts where month = month and year = year
+		$appointments = Appointment::all();
 	}
 }
