@@ -18,6 +18,11 @@ class CreateDaysTable extends Migration
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
         });
+
+        // Set FK
+        Schema::table('appointment', function(Blueprint $table) {
+            $table->foreign('day_id')->references('id')->on('days');
+        });
     }
 
     /**
@@ -27,6 +32,7 @@ class CreateDaysTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('days');
     }
 }

@@ -17,7 +17,7 @@ Route::get('/home', 'HomeController@show');
 
 /*
 |--------------------------------------------------------------------------
-| Appointment Routes
+| Calendar Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/calendar/{month}/{year}', 'AppointmentController@renderCalendar');
+Route::get('/calendar/{month}/{year}', 'CalendarController@renderCalendar');

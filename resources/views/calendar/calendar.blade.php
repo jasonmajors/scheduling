@@ -9,7 +9,7 @@ Jason
 <div class="container">
     <h1>{{ $month }}, {{ $year }}</h1>
     <?php echo $calendarMarkup; ?>
-     <a href="{{ action('AppointmentController@renderCalendar', ['month' => $prevPagesMonth, 'year' => $prevPagesYear]) }}">Last Month</a>
-     <a href="{{ action('AppointmentController@renderCalendar', ['month' => $nextMonth, 'year' => $nextPagesYear]) }}">Next Month</a>
+     <a href="{{ action('CalendarController@renderCalendar', ['month' => $prevPagesMonth, 'year' => $prevPagesYear]) }}">Last Month</a>
+     <a href="{{ action('CalendarController@renderCalendar', ['month' => $nextMonth, 'year' => $nextPagesYear]) }}">Next Month</a>
 </div>
 @endsection
