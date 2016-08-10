@@ -10,4 +10,6 @@ class Day extends Model
     {
     	return $this->hasMany('App\Appointment');
     }
+
+    protected $dates = ['start_time', 'end_time'];
 }

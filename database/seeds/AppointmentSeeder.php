@@ -26,7 +26,7 @@ class AppointmentSeeder extends Seeder
             'last_name'  => 'Majors',
             'email'      => 'jmajors@mc.com',
             'start_time' => Carbon::create(2016,07,24, 13, 3, 32)->toDateTimeString(),
-            'end_time'   => Carbon::create(2016,07,24, 13, 4, 32)->toDateTimeString(),
+            'end_time'   => Carbon::create(2016,07,24, 13, 10, 32)->toDateTimeString(),
             'day_id'     => 2
         ]);
     }

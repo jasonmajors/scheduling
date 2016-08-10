@@ -8,7 +8,11 @@ use Carbon\Carbon;
 
 class DayRepository
 {
-	protected $availableTime = [];
+	/**
+	* Stores TimeInterval objects for the Day
+	* @var array
+	*/
+	protected $availableTime;
 
 
 	/**
@@ -16,35 +20,69 @@ class DayRepository
 	* @param Day
 	* @return array Available time for a given Day object
 	*/
-	public function availableTime(Day $day)
+	public function getAvailableTime(Day $day)
 	{
 		$startDateTime = $day->start_time; 
 		$endDatetime   = $day->end_time;
+		$appointments  = $day->appointments;
 		
-		// day end
-		// appointments
-		$appointments = $day->appointments;
+		$this->availableTime = $this->loadTimeIntervals($startDateTime, $endDatetime);
 
 		foreach($appointments as $appointment) {
-			//
+			foreach($this->availableTime as $key => $timeInterval) {
+				// Evaluates to true if there's overlap
+				if (($appointment->start_time <= $timeInterval->getEnd()) && ($appointment->end_time >= $timeInterval->getStart())) {
+					// Destroy the TimeInterval instance
+					unset($this->availableTime[$key]);
+				}
+			}
 		}
+
+		return $this->availableTime;
 	}
 
-	public static function loadTimeIntervals(Carbon $startDateTime, Carbon $endDateTime, int $increment)
+
+	/**
+	* Loads any Day objects that have been created in a given month
+	*
+	* @param int Month
+	* @param int Year
+	* @return array Instances of day
+	*/
+	public function loadDaysInMonth(int $month, int $year)
+	{
+		$days = Day::whereBetween(
+			'start_time', [
+			Carbon::create($year, $month, 1,0,0)->startOfMonth(),
+			Carbon::create($year, $month, 1,0,0)->endOfMonth()
+			]
+		)->get();
+
+		return $days;
+	}
+
+
+	/**
+	* @todo Decouple from minutes
+	*
+	* @return array An array of TimeInterval objects
+	*/
+	private function loadTimeIntervals(Carbon $startDateTime, Carbon $endDateTime, int $increment=1)
 	{	
-		$availableTime = [];
+		// Clear previous available times
+		$this->availableTime = [];
 		// Create new Carbon instance of $startDateTime
 		$start = $startDateTime->copy();
 
 		while($start < $endDateTime) {
-			// @todo Need to be able to change the unit of increment
-			// Need new instance so $start isn't incremented before creating a new TimeInterval
+			// Make new instance so $start isn't incremented before creating a new TimeInterval
 			$endOfInterval = $start->copy()->addMinutes($increment);
 			$timeInterval = new TimeInterval($start, $endOfInterval);
-			$availableTime[] = $timeInterval;
+			$this->availableTime[] = $timeInterval;
+			// New instance
 			$start = $start->copy()->addMinutes($increment);
 		}
 
-		return $availableTime;
+		return $this->availableTime;
 	}
 }

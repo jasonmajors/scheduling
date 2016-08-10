@@ -8,7 +8,7 @@ use App\Repositories\CalendarRepository;
 class CalendarController extends Controller
 {
     /**
-     * The appointment repository instance.
+     * The calendar repository instance.
      *
      * @var CalendarRepository
      */
@@ -16,13 +16,22 @@ class CalendarController extends Controller
 
 
     /**
+     * The day repository instance.
+     *
+     * @var DayRepository
+     */
+    protected $dayRepo;
+
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(CalendarRepository $calendarRepo)
+    public function __construct(CalendarRepository $calendarRepo, DayRepository $dayRepo)
     {
         $this->calendarRepo = $calendarRepo;
+        $this->dayRepo      = $dayRepo;
 
         //$this->middleware('auth');
         //$this->middleware('subscribed');
@@ -49,8 +58,15 @@ class CalendarController extends Controller
     */
     public function renderCalendar(int $month, int $year)
     {
+        $availableTime = [];
         // Set max month value to 12
         $month = ($month > 12) ? $month = 12 : $month = $month;
+
+        $days = $this->dayRepo->loadDaysInMonth($month, $year);
+
+        foreach ($days as $day) {
+            $availableTime[$day] = $this->dayRepo->getAvailableTime($day);
+        }
 
         $linkDates = $this->calendarRepo->getNextAndPrevCalendar($month, $year);
 
@@ -71,6 +87,9 @@ class CalendarController extends Controller
                 'calendarMarkup'=> $calendarMarkup
         ]);
     }  
+
+
+
 
 
 }
