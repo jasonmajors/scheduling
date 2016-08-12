@@ -39,7 +39,7 @@ class CalendarRepository
 
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-			$calendar.= '<td class="calendar-day">';
+			$calendar.= "<td class='calendar-day' data-dayofmonth=$list_day>";
 				/* add in the day number */
 				$calendar.= '<div class="day-number">'.$list_day.'</div>';
 

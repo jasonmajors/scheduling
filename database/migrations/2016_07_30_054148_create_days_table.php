@@ -14,7 +14,7 @@ class CreateDaysTable extends Migration
     {
         Schema::create('days', function(Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->date('date');
+            $table->date('date')->unique();
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
         });

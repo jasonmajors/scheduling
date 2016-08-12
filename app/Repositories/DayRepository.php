@@ -16,9 +16,10 @@ class DayRepository
 
 
 	/**
-	* 
+	* Removes TimeInterval instances where there's a conflicting appointment 
+	*
 	* @param Day
-	* @return array Available time for a given Day object
+	* @return array Available time for a given Day object repsented in TimeInveral instances
 	*/
 	public function getAvailableTime(Day $day)
 	{
@@ -28,12 +29,14 @@ class DayRepository
 		
 		$this->availableTime = $this->loadTimeIntervals($startDateTime, $endDatetime);
 
-		foreach($appointments as $appointment) {
-			foreach($this->availableTime as $key => $timeInterval) {
-				// Evaluates to true if there's overlap
-				if (($appointment->start_time <= $timeInterval->getEnd()) && ($appointment->end_time >= $timeInterval->getStart())) {
-					// Destroy the TimeInterval instance
-					unset($this->availableTime[$key]);
+		if ($appointments) {
+			foreach($appointments as $appointment) {
+				foreach($this->availableTime as $key => $timeInterval) {
+					// Evaluates to true if there's overlap
+					if (($appointment->start_time <= $timeInterval->getEnd()) && ($appointment->end_time >= $timeInterval->getStart())) {
+						// Destroy the TimeInterval instance
+						unset($this->availableTime[$key]);
+					}
 				}
 			}
 		}

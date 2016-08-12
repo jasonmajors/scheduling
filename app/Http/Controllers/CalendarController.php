@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\CalendarRepository;
+use App\Repositories\DayRepository;
 
 class CalendarController extends Controller
 {
@@ -61,11 +62,22 @@ class CalendarController extends Controller
         $availableTime = [];
         // Set max month value to 12
         $month = ($month > 12) ? $month = 12 : $month = $month;
-
+        /** 
+        * @var Array of Day objects */
         $days = $this->dayRepo->loadDaysInMonth($month, $year);
 
         foreach ($days as $day) {
-            $availableTime[$day] = $this->dayRepo->getAvailableTime($day);
+            // start_time is a Carbon instance
+            $dayOfMonth = $day->start_time->day;
+
+            if(isset($availableTime[$dayOfMonth])) {
+                $availableTime[$dayOfMonth] = array_merge(
+                                                $availableTime[$dayOfMonth], 
+                                                $this->dayRepo->getAvailableTime($day)
+                                            );
+            } else {
+                $availableTime[$dayOfMonth] = $this->dayRepo->getAvailableTime($day);
+            }
         }
 
         $linkDates = $this->calendarRepo->getNextAndPrevCalendar($month, $year);
@@ -84,7 +96,8 @@ class CalendarController extends Controller
                 'nextPagesYear' => $nextPagesYear, 
                 'prevPagesMonth'=> $prevMonth,
                 'prevPagesYear' => $prevPagesYear,
-                'calendarMarkup'=> $calendarMarkup
+                'calendarMarkup'=> $calendarMarkup,
+                'availableTime' => $availableTime
         ]);
     }  
 

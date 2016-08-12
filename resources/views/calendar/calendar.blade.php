@@ -12,4 +12,10 @@ Jason
      <a href="{{ action('CalendarController@renderCalendar', ['month' => $prevPagesMonth, 'year' => $prevPagesYear]) }}">Last Month</a>
      <a href="{{ action('CalendarController@renderCalendar', ['month' => $nextMonth, 'year' => $nextPagesYear]) }}">Next Month</a>
 </div>
+
+@foreach (array_keys($availableTime) as $day)
+<div class="schedule-panel {{ $day }}">{{ $day }}</div>
+@endforeach
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{{ URL::asset('js/calendar.js') }}"></script>
 @endsection
