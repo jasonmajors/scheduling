@@ -59,7 +59,7 @@ class CalendarController extends Controller
     */
     public function renderCalendar(int $month, int $year)
     {
-        $availableTime = [];
+        $appointments  = [];
         // Set max month value to 12
         $month = ($month > 12) ? $month = 12 : $month = $month;
         /** 
@@ -69,17 +69,9 @@ class CalendarController extends Controller
         foreach ($days as $day) {
             // start_time is a Carbon instance
             $dayOfMonth = $day->start_time->day;
-
-            if(isset($availableTime[$dayOfMonth])) {
-                $availableTime[$dayOfMonth] = array_merge(
-                                                $availableTime[$dayOfMonth], 
-                                                $this->dayRepo->getAvailableTime($day)
-                                            );
-            } else {
-                $availableTime[$dayOfMonth] = $this->dayRepo->getAvailableTime($day);
-            }
+            $appointments[$dayOfMonth] = $day->appointments;
         }
-
+        
         $linkDates = $this->calendarRepo->getNextAndPrevCalendar($month, $year);
 
         $nextMonth      = $linkDates['nextMonth'];
@@ -90,19 +82,15 @@ class CalendarController extends Controller
         $calendarMarkup = $this->calendarRepo->renderCalendar($month, $year);
 
         return view('calendar.calendar', [
-                'month'         => date('F', mktime(0,0,0, $month, 1, $year)),
-                'year'          => $year,
-                'nextMonth'     => $nextMonth,
-                'nextPagesYear' => $nextPagesYear, 
-                'prevPagesMonth'=> $prevMonth,
-                'prevPagesYear' => $prevPagesYear,
-                'calendarMarkup'=> $calendarMarkup,
-                'availableTime' => $availableTime
+            'month'         => date('F', mktime(0,0,0, $month, 1, $year)),
+            'year'          => $year,
+            'nextMonth'     => $nextMonth,
+            'nextPagesYear' => $nextPagesYear, 
+            'prevPagesMonth'=> $prevMonth,
+            'prevPagesYear' => $prevPagesYear,
+            'calendarMarkup'=> $calendarMarkup,
+            'appointments'  => $appointments
         ]);
     }  
-
-
-
-
 
 }

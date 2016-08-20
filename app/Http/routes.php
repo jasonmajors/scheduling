@@ -21,3 +21,15 @@ Route::get('/home', 'HomeController@show');
 |--------------------------------------------------------------------------
 */
 Route::get('/calendar/{month}/{year}', 'CalendarController@renderCalendar');
+
+/*
+|--------------------------------------------------------------------------
+| Appointment Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/appointments/{day}', 'AppointmentController@getDaysAppointments'); 	  
+Route::get('/appointment/{appointment}', 'AppointmentController@getAppointment'); 	 
+//Route::put('/appointment/{id}/{data}')   // Updates an appointment
+Route::post('/appointment/', 'AppointmentController@createAppointment'); 
+//Route::delete('/appointment/{id}')       // Deletes an appointment

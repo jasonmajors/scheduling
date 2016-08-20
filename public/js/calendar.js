@@ -1,4 +1,5 @@
 $(".calendar-day").click(function() {
 	var day = $(this).attr("data-dayofmonth");
-	alert(day);
+	$(".schedule-panel").hide();
+	$(".schedule-panel." + day).show();
 });

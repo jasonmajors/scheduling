@@ -46,7 +46,7 @@ class DayRepository
 
 
 	/**
-	* Loads any Day objects that have been created in a given month
+	* Loads Day objects that have been created in a given month
 	*
 	* @param int Month
 	* @param int Year
