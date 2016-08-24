@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Day;
+use App\Appointment;
 use App\Helpers\TimeInterval;
 use Carbon\Carbon;
 
@@ -45,6 +46,17 @@ class DayRepository
 	}
 
 
+	public function checkAvailability(Day $day, Carbon $apptStart, Carbon $apptEnd) 
+	{
+		$appointments = $day->appointments;
+		foreach ($appointments as $appointment) {
+			// Evaluates to true if there's overlap
+			if (($appointment->start_time <= $apptEnd) && ($appointment->end_time >= $apptStart)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	/**
 	* Loads Day objects that have been created in a given month
 	*

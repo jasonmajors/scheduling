@@ -5,19 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Day;
 use App\Appointment;
+use App\Repositories\DayRepository;
 use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
+    protected $dayRepo;
+
+
+    public function __construct(DayRepository $dayRepo)
+    {
+        $this->dayRepo = $dayRepo;
+    }
+
+
     public function getAppointment($id)
     {
         dd(Appointment::find($id));
     }
 
+
     public function getDaysAppointments(Day $day)
     {
         dd($day->appointments);
     }
+
 
     public function createAppointment(Request $request)
     {
@@ -33,6 +45,19 @@ class AppointmentController extends Controller
         $first_name = 'Jas';
         $last_name  = 'Majors';
 
+// CHECK FOR AVAILABILITY
+        $date = date('Y-m-d', strtotime($start_time));
+        $day = Day::where('date', '=', $date)->first();
+        $apptStart = Carbon::parse($start_time);
+        $apptEnd = Carbon::parse($end_time);
+        $available = $this->dayRepo->checkAvailability($day, $apptStart, $apptEnd);
+        dd($available);
+        // Get the other appointments for the day
+
+        // Check for overlap
+        // No overlap? Submit
+       // dd($start_time);
+        
         Appointment::create(compact(
             'start_time', 
             'end_time', 
@@ -43,24 +68,8 @@ class AppointmentController extends Controller
             )
         );
         
-/*        $appointment = new Appointment;
-        $appointment->start_time = $start_time;
-        $appointment->end_time   = $end_time;
-        $appointment->first_name = $first_name;
-        $appointment->last_name  = $last_name;
-        $appointment->email      = $email;
-        $appointment->day_id     = $day_id;
-        $appointment->save();*/
-
-        // CHECK FOR AVAILABILITY
         
-        //$date       = Carbon::parse($start_time);
-        // Load the day object of the appointment
-       // $day = Day::where('date', '=', $date)->first();
-        // Get the other appointments for the day
-        // Check for overlap
-        // No overlap? Submit
-       // dd($start_time);
+
     }
 
     public function updateAppointment(Request $request, Appointment $appointment)
