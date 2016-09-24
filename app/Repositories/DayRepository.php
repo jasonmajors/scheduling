@@ -18,7 +18,7 @@ class DayRepository
 
 	/**
 	* Removes TimeInterval instances where there's a conflicting appointment 
-	*
+	* Not in use
 	* @param Day
 	* @return array Available time for a given Day object repsented in TimeInveral instances
 	*/
@@ -46,6 +46,13 @@ class DayRepository
 	}
 
 
+	/**
+	* Checks if a Day has the availbility for an appointment given a start and end time
+	*
+	* @param Carbon $apptStart
+	* @param Carbon $apptEnd
+	* @return bool
+	*/
 	public function checkAvailability(Day $day, Carbon $apptStart, Carbon $apptEnd) 
 	{
 		$appointments = $day->appointments;
@@ -57,6 +64,8 @@ class DayRepository
 		}
 		return true;
 	}
+
+
 	/**
 	* Loads Day objects that have been created in a given month
 	*

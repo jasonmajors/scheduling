@@ -41,40 +41,37 @@ class AppointmentController extends Controller
         $start_time = $request->input('start_time');
         $end_time   = $request->input('end_time');
         $email      = 'jmajors@test.com';
-        $day_id     = 2;
         $first_name = 'Jas';
         $last_name  = 'Majors';
-
-// CHECK FOR AVAILABILITY
+        // Check for appointment availability
         $date = date('Y-m-d', strtotime($start_time));
+        // TODO: Need something to handle when day doesnt exist
         $day = Day::where('date', '=', $date)->first();
+        $day_id = $day->id;
+
         $apptStart = Carbon::parse($start_time);
         $apptEnd = Carbon::parse($end_time);
+        
         $available = $this->dayRepo->checkAvailability($day, $apptStart, $apptEnd);
-        dd($available);
-        // Get the other appointments for the day
 
-        // Check for overlap
-        // No overlap? Submit
-       // dd($start_time);
-        
-        Appointment::create(compact(
-            'start_time', 
-            'end_time', 
-            'email', 
-            'day_id', 
-            'first_name', 
-            'last_name'
-            )
-        );
-        
-        
-
+        if ($available) {
+            Appointment::create(compact(
+                'start_time', 
+                'end_time', 
+                'email', 
+                'day_id', 
+                'first_name', 
+                'last_name'
+                )
+            );
+        } else {
+            // Do something here
+        }
     }
 
     public function updateAppointment(Request $request, Appointment $appointment)
     {
-        //
+        // Not yet... patience...
     }
 
     public function deleteAppointment(Request $request, Appointment $appointment)
