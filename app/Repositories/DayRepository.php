@@ -57,7 +57,7 @@ class DayRepository
 	{
 		$appointments = $day->appointments;
 		foreach ($appointments as $appointment) {
-			// Evaluates to true if there's overlap
+			// If statement evaluates to true if there's overlap
 			if (($appointment->start_time <= $apptEnd) && ($appointment->end_time >= $apptStart)) {
 				return false;
 			}
